@@ -5,16 +5,16 @@ option(MX_USE_SAMPLED_SPECTRUM "Use sampled spectrum rather than RGB spectrum")
 
 add_library(
     MaxineRuntime STATIC 
-    api/Config.h
-    api/Engine.h
-    api/Engine.cpp
-    api/Document.h
-    api/Document.cpp
-    api/IRenderer.h
-    api/SWRenderer.h
-    api/SWRenderer.cpp
-    api/HWRenderer.h
-    api/HWRenderer.cpp
+    api/Maxine/Config.h
+    api/Maxine/Engine.h
+    api/Maxine/Engine.cpp
+    api/Maxine/Document.h
+    api/Maxine/Document.cpp
+    api/Maxine/IRenderer.h
+    api/Maxine/SWRenderer.h
+    api/Maxine/SWRenderer.cpp
+    api/Maxine/HWRenderer.h
+    api/Maxine/HWRenderer.cpp
 )
 
 set_target_properties(
@@ -34,6 +34,7 @@ target_compile_definitions(
 target_include_directories(
     MaxineRuntime PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/api"
 )
 
 find_package(Vulkan REQUIRED)

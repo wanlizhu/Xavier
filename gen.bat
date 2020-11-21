@@ -1,6 +1,6 @@
 @echo off
 
-set bindir=C:/Users/%username%/Maxine-build
+set bindir=C:/Users/%username%/Xavier-build
 if exist %bindir% (rd /s/q %bindir%)
 
 for /F "delims=" %%i in ("conan.exe") do (

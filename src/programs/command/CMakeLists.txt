@@ -9,7 +9,7 @@ set_target_properties(
     XavierCommand PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
-    OUTPUT_NAME maxine
+    OUTPUT_NAME xavier
 )
 
 target_compile_definitions(
@@ -21,7 +21,7 @@ target_compile_definitions(
 
 target_link_libraries(
     XavierCommand PUBLIC
-    MaxineRuntime
+    XavierRuntime
 )
 
 install(

@@ -1,17 +1,24 @@
 cmake_minimum_required(VERSION 3.17.1)
 
 option(XAV_USE_FLOAT_AS_DOUBLE  "Use 64-bits floats" OFF)
-option(XAV_USE_SAMPLED_SPECTRUM "Use sampled spectrum rather than RGB spectrum")
+option(XAV_USE_SAMPLED_SPECTRUM "Use sampled spectrum rather than RGB spectrum" OFF)
 
 add_library(
     XavierRuntime STATIC
-    XavierConfig.h
-    XavierAPI.h
-    core/MaxineAPI.cpp
+    interface/XavierConfig.h
+    interface/IEngine.h
+    interface/IDocument.h
+    interface/IRenderer.h
+    core/Engine.h
+    core/Engine.cpp
     core/Document.h
     core/Document.cpp
     core/Window.h
     core/Window.cpp
+    core/RasterRenderer.h
+    core/RasterRenderer.cpp
+    core/RaytracingRenderer.h
+    core/RaytracingRenderer.cpp
 )
 
 set_target_properties(
@@ -31,6 +38,7 @@ target_compile_definitions(
 target_include_directories(
     XavierRuntime PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/interface"
 )
 
 find_package(Vulkan REQUIRED)

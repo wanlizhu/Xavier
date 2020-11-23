@@ -10,15 +10,4 @@ namespace Xavier
         virtual ~IRenderer() = default;
     };
 
-    class IRasterRenderer : public IRenderer
-    {
-    public:
-        virtual ~IRasterRenderer() = default;
-    };
-
-    class IRaytracingRenderer : public IRenderer
-    {
-    public:
-        virtual ~IRaytracingRenderer() = default;
-    };
 }

@@ -15,10 +15,14 @@ add_library(
     core/Document.cpp
     core/Window.h
     core/Window.cpp
-    core/RasterRenderer.h
-    core/RasterRenderer.cpp
-    core/RaytracingRenderer.h
-    core/RaytracingRenderer.cpp
+    core/Renderer.h
+    core/Renderer.cpp
+    core/ImageRenderer.h
+    core/ImageRenderer.cpp
+    core/GPURaytracingRenderer.h
+    core/GPURaytracingRenderer.cpp
+    core/CPURaytracingRenderer.h
+    core/CPURaytracingRenderer.cpp
 )
 
 set_target_properties(

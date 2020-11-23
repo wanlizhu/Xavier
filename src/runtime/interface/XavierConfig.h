@@ -54,6 +54,20 @@ namespace Xavier
     static constexpr Float PI_OVER4 = 0.78539816339744830961;
     static constexpr Float SQRT2 = 1.41421356237309504880;
 
+    enum class EPixelFormat
+    {
+        Undefined = 0,
+        R_U8,
+        R_F32,
+        RG_U8,
+        RG_F32,
+        RGB_U8,
+        RGB_F32,
+        RGBA_U8,
+        RGBA_F32,
+        D24S8,
+    };
+
     inline uint32_t FloatToBits(float f)
     {
         uint32_t ui;

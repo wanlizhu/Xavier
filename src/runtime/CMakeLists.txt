@@ -19,10 +19,10 @@ add_library(
     core/Renderer.cpp
     core/ImageRenderer.h
     core/ImageRenderer.cpp
-    core/GPURaytracingRenderer.h
-    core/GPURaytracingRenderer.cpp
-    core/CPURaytracingRenderer.h
-    core/CPURaytracingRenderer.cpp
+    core/GPURenderer.h
+    core/GPURenderer.cpp
+    core/CPURenderer.h
+    core/CPURenderer.cpp
 )
 
 set_target_properties(

@@ -3,12 +3,14 @@
 set bindir=C:/Users/%username%/Xavier-build
 if exist %bindir% (rd /s/q %bindir%)
 
-for /F "delims=" %%i in ("conan.exe") do (
-    if exist %%~$PATH:i (
-        conan -v
-    ) else (
-        pip install conan
-    )
+python3 --version > null || (
+	echo install python3 and run this script again
+	pause
+	exit 1
+)
+
+conan --version > null || (
+	python3 -m pip install conan
 )
 
 conan install --install-folder "%bindir%" --build missing .

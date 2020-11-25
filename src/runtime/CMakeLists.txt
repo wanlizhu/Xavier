@@ -15,14 +15,8 @@ add_library(
     core/Document.cpp
     core/Window.h
     core/Window.cpp
-    core/Renderer.h
-    core/Renderer.cpp
     core/ImageRenderer.h
     core/ImageRenderer.cpp
-    core/GPURenderer.h
-    core/GPURenderer.cpp
-    core/CPURenderer.h
-    core/CPURenderer.cpp
 )
 
 get_target_property(SourceFiles XavierRuntime SOURCES)

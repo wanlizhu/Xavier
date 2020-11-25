@@ -25,6 +25,9 @@ add_library(
     core/CPURenderer.cpp
 )
 
+get_target_property(SourceFiles XavierRuntime SOURCES)
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SourceFiles})
+
 set_target_properties(
     XavierRuntime PROPERTIES
     CXX_STANDARD 17

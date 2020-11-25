@@ -11,7 +11,7 @@ namespace Xavier
     class Window
     {
     public:
-        Window();
+        Window() = default;
         Window(const Window&) = delete;
         Window& operator=(const Window&) = delete;
         virtual ~Window();
@@ -35,6 +35,12 @@ namespace Xavier
             int height,
             EPixelFormat format
         );
+
+    private:
+        static void OnFramebufferSize(GLFWwindow* handle, int w, int h);
+        static void OnMouseButton(GLFWwindow* handle, int button, int action, int mods);
+        static void OnMousePos(GLFWwindow* handle, double xpos, double ypos);
+        static void OnKey(GLFWwindow* handle, int key, int scancode, int action, int mods);
 
     private:
         GLFWwindow* mWindow = nullptr;

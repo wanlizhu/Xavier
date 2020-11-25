@@ -52,6 +52,7 @@ find_package(Vulkan REQUIRED)
 target_link_libraries(
     XavierRuntime PUBLIC
     Vulkan::Vulkan
+    CONAN_PKG::glfw
 )
 
 install(

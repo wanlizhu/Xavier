@@ -12,6 +12,7 @@ namespace Xavier
         ImageRenderer& operator=(const ImageRenderer&) = delete;
         virtual ~ImageRenderer();
 
-
+        virtual bool Init(void* window) override;
+        virtual void Deinit() override;
     };
 }

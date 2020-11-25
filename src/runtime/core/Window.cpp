@@ -14,7 +14,12 @@ namespace Xavier
     Window::~Window()
     {
         Close();
-        mImageRenderer = nullptr;
+        
+        if (mImageRenderer)
+        {
+            mImageRenderer->Deinit();
+            mImageRenderer = nullptr;
+        }
     }
 
     bool Window::Open(
@@ -57,20 +62,25 @@ namespace Xavier
             glfwSetKeyCallback(mWindow, &Window::OnKey);
         }
 
-#ifdef _WIN32
-        void* window = (void*)glfwGetWin32Window(mWindow);
-#else
-        void* window = 
-#endif
+        mImageRenderer.reset(new ImageRenderer());
+        mImageRenderer->Init(GetNativeHandle());
 
         return true;
     }
 
     void Window::Close()
-    {}
+    {
+        glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
+    }
 
     void* Window::GetNativeHandle() const
-    {}
+    {
+#ifdef _WIN32
+        return (void*)glfwGetWin32Window(mWindow);
+#else
+        return (void*)glfwGetCocoaWindow(mWindow);
+#endif
+    }
 
     void Window::ClearFramebuffer(float r, float g, float b)
     {}

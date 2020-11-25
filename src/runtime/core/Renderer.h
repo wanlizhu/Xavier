@@ -12,6 +12,7 @@ namespace Xavier
         Renderer& operator=(const Renderer&) = delete;
         virtual ~Renderer();
 
-
+        virtual bool Init(void* window) = 0;
+        virtual void Deinit() = 0;
     };
 }

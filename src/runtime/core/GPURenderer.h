@@ -4,13 +4,13 @@
 
 namespace Xavier
 {
-    class GPURaytracingRenderer : public IRenderer
+    class GPURenderer : public IRenderer
     {
     public:
-        GPURaytracingRenderer() = default;
-        GPURaytracingRenderer(const GPURaytracingRenderer&) = delete;
-        GPURaytracingRenderer& operator=(const GPURaytracingRenderer&) = delete;
-        virtual ~GPURaytracingRenderer();
+        GPURenderer() = default;
+        GPURenderer(const GPURenderer&) = delete;
+        GPURenderer& operator=(const GPURenderer&) = delete;
+        virtual ~GPURenderer();
 
 
     };

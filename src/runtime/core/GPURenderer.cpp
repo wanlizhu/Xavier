@@ -1,4 +1,4 @@
-#include "GPURaytracingRenderer.h"
+#include "GPURenderer.h"
 
 namespace Xavier
 {

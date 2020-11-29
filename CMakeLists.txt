@@ -10,6 +10,8 @@ conan_cmake_run(
 	BASIC_SETUP 
 	CMAKE_TARGETS
     BUILD missing
+	IMPORTS "bin, *.dll -> ${CMAKE_BINARY_DIR}/bin"
+    IMPORTS "lib, *.dylib* -> ${CMAKE_BINARY_DIR}/bin"
 )
 
 add_subdirectory(engine)

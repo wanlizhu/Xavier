@@ -1,6 +1,6 @@
 #pragma once
 
-#include "XavierConfig.h"
+#include "Xavier/Config.h"
 
 namespace Xavier
 {

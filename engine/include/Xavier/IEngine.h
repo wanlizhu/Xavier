@@ -1,7 +1,8 @@
 #pragma once
 
-#include "IDocument.h"
-#include "IRenderer.h"
+#include "Xavier/Config.h"
+#include "Xavier/IDocument.h"
+#include "Xavier/IRenderer.h"
 
 namespace Xavier
 {

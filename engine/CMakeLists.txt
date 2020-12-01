@@ -17,6 +17,10 @@ add_library(
     src/Window.cpp
     src/Renderer.h
     src/Renderer.cpp
+    src/tools/MathCore.h
+    src/tools/MathCore.cpp
+    src/tools/CommandArguments.h
+    src/tools/CommandArguments.cpp
 )
 
 get_target_property(SourceFiles XavierEngine SOURCES)
@@ -32,9 +36,21 @@ set_target_properties(
 
 target_compile_definitions(
     XavierEngine
-    PUBLIC UNICODE
-    PUBLIC $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN>
-    PUBLIC $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>
+    PUBLIC 
+    UNICODE
+    $<$<BOOL:${WIN32}>:NOMINMAX>
+    $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN>
+    $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>
+)
+
+target_compile_options(
+    XavierEngine
+    PUBLIC
+    $<$<BOOL:${WIN32}>:/wd4305>    # double constant assigned to float
+    $<$<BOOL:${WIN32}>:/wd4244>    # int -> float conversion
+    $<$<BOOL:${WIN32}>:/wd4843>    # double -> float conversion
+    $<$<BOOL:${WIN32}>:/wd4267>    # size_t -> int
+    $<$<BOOL:${WIN32}>:/wd4838>    # another double -> int
 )
 
 target_include_directories(

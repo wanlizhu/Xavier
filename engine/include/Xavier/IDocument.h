@@ -9,12 +9,12 @@ namespace Xavier
     {
     public:
         virtual ~IDocument() = default;
-        virtual bool IsValid() const = 0;
         virtual void OpenWindow() = 0;
         virtual void CloseWindow() = 0;
-        virtual void Render(
+        virtual void WaitUntilWindowClosed() = 0;
+        virtual void SetRenderer(IRenderer* renderer) = 0;
+        virtual void RunRayTracing(
             const char* outFile,
-            IRenderer* renderer, 
             PFN_OnProgress progressFunc, 
             PFN_OnError errorFunc
         ) = 0;

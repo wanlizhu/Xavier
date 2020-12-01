@@ -9,7 +9,7 @@ get_target_property(SourceFiles XavierEditor SOURCES)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SourceFiles})
 
 if (WIN32)
-    set(SubDirName "$(Configuration)")
+    set(SubDirName "$(Configuration)/")
 else()
     set(SubDirName "")
 endif()
@@ -21,7 +21,9 @@ set_target_properties(
     CXX_STANDARD_REQUIRED ON
     OUTPUT_NAME XavierEditor
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}"
+    LINK_FLAGS "/ignore:4099"
 )
+
 
 target_compile_definitions(
     XavierEditor
@@ -50,6 +52,7 @@ install(
 add_custom_command(
     TARGET XavierEditor
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}/assets
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/config ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}/config
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/config ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}config
+    COMMENT "Copy resources to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}"
 )

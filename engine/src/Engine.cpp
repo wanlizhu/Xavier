@@ -1,39 +1,63 @@
 #include "Engine.h"
+#include "Document.h"
+#include "Renderer.h"
+#include "Window.h"
 
 namespace Xavier
 {
-    IEngine* AllocateEngine()
+    IEngine* AllocateEngine(int argc, char** argv)
     {
-        return new Engine();
+        return new Engine(argc, argv);
     }
 
     void FreeEngine(IEngine* engine)
     {
-        if (engine)
-            delete engine;
+        delete engine;
+    }
+
+    Engine::Engine(int argc, char** argv)
+        : mArguments(argc, argv)
+    {
+        mRenderer.reset(new Renderer());
+        mRenderer->Init();
     }
 
     Engine::~Engine()
-    {}
-
-    bool Engine::Init()
     {
-        return true;
+        for (auto& doc : mDocuments)
+            doc = nullptr;
+        mDocuments.clear();
+
+        mRenderer->Deinit();
+        mRenderer = nullptr;
     }
 
-    void Engine::Deinit()
-    {}
+    bool Engine::IsRayTracingEnabled() const
+    {
+        return mArguments.IsOption("--raytracing");
+    }
 
     IRenderer* Engine::GetRenderer()
     {
-        return nullptr;
+        return mRenderer.get();
     }
 
     IDocument* Engine::OpenDocument(const char* filename)
     {
-        return nullptr;
+        mDocuments.emplace_back(new Document(filename));
+        return mDocuments.back().get();
     }
 
     void Engine::CloseDocument(IDocument* doc)
-    {}
+    {
+        for (auto& docptr : mDocuments)
+        {
+            if (docptr.get() == doc)
+            {
+                std::swap(docptr, mDocuments.back());
+                mDocuments.pop_back();
+                break;
+            }
+        }
+    }
 }

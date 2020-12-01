@@ -11,17 +11,27 @@
 
 namespace Xavier
 {
+    Window::Window()
+    {
+        smNumWindow += 1;
+    }
+
     Window::~Window()
     {
         Close();
+        
+        smNumWindow -= 1;
+        if (smNumWindow == 0)
+        {
+            glfwTerminate();
+        }
     }
 
     bool Window::Open(
-        const char* title,
-        int posx,
-        int posy,
+        const std::string& title,
         int width,
         int height,
+        bool centralize,
         bool resizable,
         bool interactive
     )
@@ -36,7 +46,7 @@ namespace Xavier
         mWindow = glfwCreateWindow(
             width,
             height,
-            title,
+            title.c_str(),
             nullptr,
             nullptr
         );
@@ -50,9 +60,18 @@ namespace Xavier
             {
                 glfwSetFramebufferSizeCallback(mWindow, &Window::OnFramebufferSize);
             }
+            glfwSetWindowRefreshCallback(mWindow, &Window::OnRefresh);
             glfwSetMouseButtonCallback(mWindow, &Window::OnMouseButton);
             glfwSetCursorPosCallback(mWindow, &Window::OnMousePos);
             glfwSetKeyCallback(mWindow, &Window::OnKey);
+        }
+
+        if (centralize)
+        {
+            std::array<int, 2> size = ScreenSizeInPixels();
+            int posx = (size[0] - width) * 0.5;
+            int posy = (size[1] - height) * 0.5;
+            glfwSetWindowPos(mWindow, posx, posy);
         }
 
         return true;
@@ -60,7 +79,35 @@ namespace Xavier
 
     void Window::Close()
     {
-        glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
+        if (mWindow)
+        {
+            glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
+            glfwDestroyWindow(mWindow);
+            mWindow = nullptr;
+        }
+    }
+
+    void Window::MessageLoop()
+    {
+        assert(mResizeCallback != nullptr);
+        assert(mRenderCallback != nullptr);
+
+        while (!glfwWindowShouldClose(mWindow))
+        {
+            glfwPollEvents();
+        }
+
+        Close();
+    }
+
+    void Window::SetRenderCallback(PFN_OnRender renderFunc)
+    {
+        mRenderCallback = renderFunc;
+    }
+
+    void Window::SetResizeCallback(PFN_OnResize resizeFunc)
+    {
+        mResizeCallback = resizeFunc;
     }
 
     void* Window::GetNativeHandle() const
@@ -70,5 +117,40 @@ namespace Xavier
 #else
         return (void*)glfwGetCocoaWindow(mWindow);
 #endif
+    }
+
+    void Window::OnRefresh(GLFWwindow* handle)
+    {
+        auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(handle));
+        win->mRenderCallback();
+    }
+
+    void Window::OnFramebufferSize(GLFWwindow* handle, int w, int h)
+    {
+        auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(handle));
+        win->mResizeCallback();
+    }
+
+    void Window::OnMouseButton(GLFWwindow* handle, int button, int action, int mods)
+    {
+        auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(handle));
+    }
+
+    void Window::OnMousePos(GLFWwindow* handle, double xpos, double ypos)
+    {
+        auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(handle));
+    }
+
+    void Window::OnKey(GLFWwindow* handle, int key, int scancode, int action, int mods)
+    {
+        auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(handle));
+    }
+
+    std::array<int, 2> ScreenSizeInPixels()
+    {
+        assert(glfwInit() == GLFW_TRUE);
+
+        auto videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        return {videoMode->width, videoMode->height};
     }
 }

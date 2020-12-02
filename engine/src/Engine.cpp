@@ -1,6 +1,6 @@
 #include "Engine.h"
 #include "Document.h"
-#include "Renderer.h"
+#include "VulkanRenderer.h"
 #include "Window.h"
 
 namespace Xavier
@@ -18,7 +18,7 @@ namespace Xavier
     Engine::Engine(int argc, char** argv)
         : mArguments(argc, argv)
     {
-        mRenderer.reset(new Renderer());
+        mRenderer.reset(new VulkanRenderer());
         mRenderer->Init();
     }
 

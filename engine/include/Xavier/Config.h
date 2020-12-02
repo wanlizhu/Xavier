@@ -34,8 +34,8 @@ namespace Xavier
     using Float = float;
 #endif
 
-    using PFN_OnProgress = void(*)(int, int);
-    using PFN_OnError = void(*)(int, const char*);
+    using PFN_OnProgress = std::function<void(int, int)>;
+    using PFN_OnError = std::function<void(int, const char*)>;
     using PFN_OnRender = std::function<void()>;
     using PFN_OnResize = std::function<void()>;
     using ArgumentSet = std::unordered_map<std::string, std::any>;

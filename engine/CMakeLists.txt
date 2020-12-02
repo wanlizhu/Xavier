@@ -15,8 +15,8 @@ add_library(
     src/Document.cpp
     src/Window.h
     src/Window.cpp
-    src/Renderer.h
-    src/Renderer.cpp
+    src/VulkanRenderer.h
+    src/VulkanRenderer.cpp
     src/tools/MathCore.h
     src/tools/MathCore.cpp
     src/tools/CommandArguments.h

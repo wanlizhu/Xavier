@@ -21,6 +21,18 @@ add_library(
     src/tools/MathCore.cpp
     src/tools/CommandArguments.h
     src/tools/CommandArguments.cpp
+    src/vulkan-core/VulkanBuffer.h
+    src/vulkan-core/VulkanBuffer.cpp
+    src/vulkan-core/VulkanImage.h
+    src/vulkan-core/VulkanImage.cpp
+    src/vulkan-core/VulkanEffect.h
+    src/vulkan-core/VulkanEffect.cpp
+    src/vulkan-core/VulkanRenderPass.h
+    src/vulkan-core/VulkanRenderPass.cpp
+    src/vulkan-core/VulkanDescriptorSet.h
+    src/vulkan-core/VulkanDescriptorSet.cpp
+    src/vulkan-core/VulkanCommandBuffer.h
+    src/vulkan-core/VulkanCommandBuffer.cpp
 )
 
 get_target_property(SourceFiles XavierEngine SOURCES)

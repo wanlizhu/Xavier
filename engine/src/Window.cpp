@@ -42,7 +42,7 @@ namespace Xavier
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
-
+        
         mWindow = glfwCreateWindow(
             width,
             height,

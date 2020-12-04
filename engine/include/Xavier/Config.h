@@ -19,6 +19,8 @@
 #include <functional>
 #include <mutex>
 #include <any>
+#include <map>
+#include <variant>
 #include <optional>
 #include <unordered_map>
 #include <intrin.h>
@@ -40,8 +42,11 @@ namespace Xavier
     using PFN_OnResize = std::function<void()>;
     using ArgumentSet = std::unordered_map<std::string, std::any>;
 
+    template<typename T>
+    using Array = std::vector<T>;
+
     template<typename K, typename V>
-    using HashMap = std::unordered_map<K, V>;
+    using Hash = std::unordered_map<K, V>;
 
     static constexpr Float FLOAT_MAX = std::numeric_limits<Float>::max();
     static constexpr Float FLOAT_INF = std::numeric_limits<Float>::infinity();
@@ -70,6 +75,16 @@ namespace Xavier
         D24S8,
     };
 
+    enum class EBufferUsage
+    {
+        Undefined = 0,
+    };
+
+    enum class EImageUsage
+    {
+        Undefined = 0,
+    };
+
     struct Color
     {
         float r = 0.f;
@@ -83,4 +98,42 @@ namespace Xavier
         {}
     };
 
+    struct Offset
+    {
+        int x = 0;
+        int y = 0;
+    };
+
+    struct Extent
+    {
+        int width = 0;
+        int height = 0;
+    };
+
+    struct VulkanBufferCreateInfo
+    {
+        size_t size = 0;
+        uint32_t usage = 0; 
+    };
+
+    struct VulkanImageCreateInfo
+    {
+        EPixelFormat format = EPixelFormat::Undefined;
+        Extent extent;
+        uint32_t mipLevels = 1;
+        uint32_t arrayLayers = 1;
+        uint32_t samples = 1;
+        uint32_t usage = 0;
+    };
+
+    struct VulkanRenderPassCreateInfo
+    {
+        
+    };
+
+    struct VulkanEffectCreateInfo
+    {
+        std::string vsPath;
+        std::string psPath;
+    };
 }

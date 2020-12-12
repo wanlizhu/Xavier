@@ -8,8 +8,6 @@
 #include "vulkan/vulkan.h"
 #include "Xavier/IRenderer.h"
 
-#define VK_ASSERT(result) if (result != VK_SUCCESS) { throw std::runtime_error("vulkan failed"); }
-
 namespace Xavier
 {
     class VulkanBuffer;
@@ -50,6 +48,10 @@ namespace Xavier
     private:
         void CreateVulkanInstance();
         void CreateVulkanDevice();
+        
+        void CreateVulkanSwapChain();
+        void DeleteVulkanSwapChain();
+        void AcquireNextSwapChainImage();
 
     private:
         VkInstance mVkInstance = VK_NULL_HANDLE;
@@ -57,6 +59,7 @@ namespace Xavier
         VkDevice mVkDevice = VK_NULL_HANDLE;
         VkPipelineCache mPipelineCache = VK_NULL_HANDLE;
 
+        std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
         uint32_t mGraphicsQueueFamilyIndex = UINT32_MAX;
         uint32_t mComputeQueueFamilyIndex = UINT32_MAX;
         uint32_t mPresentQueueFamilyIndex = UINT32_MAX;

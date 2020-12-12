@@ -1,21 +1,19 @@
 #pragma once
 
-#include "vulkan/vulkan.h"
-#include "Xavier/Config.h"
+#include "VulkanTools.h"
 
 namespace Xavier
 {
-    class VulkanBuffer;
-
     class VulkanImage
     {
     public:
         VulkanImage(
             VkDevice device,
             VkExtent2D extent,
+            VkFormat format,
             uint32_t mipLevels,
             uint32_t arrayLayers,
-            uint32_t samples,
+            VkSampleCountFlagBits samples,
             VkImageUsageFlags usageFlags,
             VkMemoryPropertyFlags memoryPropertyFlags
         );
@@ -23,8 +21,8 @@ namespace Xavier
         VulkanImage& operator=(const VulkanImage&) = delete;
         virtual ~VulkanImage();
 
-        void CopyFrom(const VulkanBuffer& buffer);
-        void MakeTransition(
+        void InsertMemoryBarrier(
+            VkCommandBuffer commandBuffer,
             VkAccessFlags newAccess,
             VkPipelineStageFlags newStage,
             VkImageLayout newLayout
@@ -34,7 +32,8 @@ namespace Xavier
         VkExtent2D GetExtent() const { return mExtent; }
         uint32_t GetMipLevels() const { return mMipLevels; }
         uint32_t GetArrayLayers() const { return mArrayLayers; }
-        uint32_t GetSampleCount() const { return mSampleCount; }
+        VkSampleCountFlagBits GetSampleCount() const { return mSampleCount; }
+        VkImageAspectFlags GetImageAspectFlags() const { return mImageAspectFlags; }
         VkBufferUsageFlags GetUsageFlags() const { mUsageFlags; }
         VkMemoryPropertyFlags GetMemoryPropertyFlags() const { return mMemoryPropertyFlags; }
 
@@ -44,12 +43,15 @@ namespace Xavier
         VkImageUsageFlags mUsageFlags = 0;
         VkDeviceMemory mVkDeviceMemory = VK_NULL_HANDLE;
         VkMemoryPropertyFlags mMemoryPropertyFlags = 0;
+        VkImageAspectFlags mImageAspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
         VkExtent2D mExtent = {};
+        VkFormat mFormat = VK_FORMAT_UNDEFINED;
         uint32_t mMipLevels = 1;
         uint32_t mArrayLayers = 1;
-        uint32_t mSampleCount = 1;
+        VkSampleCountFlagBits mSampleCount = VK_SAMPLE_COUNT_1_BIT;
 
         VkAccessFlags mAccessFlags = 0;
-        VkPipelineStageFlags mPipelineStageFlags = 0;
+        VkPipelineStageFlags mPipelineStageFlags = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        VkImageLayout mImageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     };
 }

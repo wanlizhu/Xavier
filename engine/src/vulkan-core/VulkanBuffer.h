@@ -1,12 +1,9 @@
 #pragma once
 
-#include "vulkan/vulkan.h"
-#include "Xavier/Config.h"
+#include "VulkanTools.h"
 
 namespace Xavier
 {
-    class VulkanImage;
-
     class VulkanBuffer
     {
     public:
@@ -22,8 +19,8 @@ namespace Xavier
 
         uint8_t* Map();
         void UnMap();
-        void CopyFrom(const VulkanImage& image);
-        void MakeTransition(
+        void InsertMemoryBarrier(
+            VkCommandBuffer commandBuffer,
             VkAccessFlags newAccess,
             VkPipelineStageFlags newStage
         );
@@ -42,7 +39,7 @@ namespace Xavier
         VkDeviceSize mSizeInBytes = 0;
 
         VkAccessFlags mAccessFlags = 0;
-        VkPipelineStageFlags mPipelineStageFlags = 0;
+        VkPipelineStageFlags mPipelineStageFlags = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 
         void* mMappedData = nullptr;
         uint32_t mNumMapped = 0;

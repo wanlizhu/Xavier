@@ -21,6 +21,7 @@ add_library(
     src/tools/MathCore.cpp
     src/tools/CommandArguments.h
     src/tools/CommandArguments.cpp
+    src/vulkan-core/VulkanTools.h
     src/vulkan-core/VulkanBuffer.h
     src/vulkan-core/VulkanBuffer.cpp
     src/vulkan-core/VulkanImage.h

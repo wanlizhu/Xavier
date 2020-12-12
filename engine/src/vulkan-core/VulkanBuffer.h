@@ -27,7 +27,7 @@ namespace Xavier
 
         VkBuffer GetHandle() const { return mVkBuffer; }
         size_t GetSizeInBytes() const { return mSizeInBytes; }
-        VkBufferUsageFlags GetUsageFlags() const { mUsageFlags; }
+        VkBufferUsageFlags GetUsageFlags() const { return mUsageFlags; }
         VkMemoryPropertyFlags GetMemoryPropertyFlags() const { return mMemoryPropertyFlags; }
 
     private:

@@ -34,6 +34,8 @@ add_library(
     src/vulkan-core/VulkanDescriptorSet.cpp
     src/vulkan-core/VulkanCommandBuffer.h
     src/vulkan-core/VulkanCommandBuffer.cpp
+    src/vulkan-core/VulkanSwapChain.h
+    src/vulkan-core/VulkanSwapChain.cpp
 )
 
 get_target_property(SourceFiles XavierEngine SOURCES)
@@ -44,7 +46,7 @@ set_target_properties(
     PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
-    OUTPUT_NAME libXavierEngine
+    OUTPUT_NAME XavierEngine
 )
 
 target_compile_definitions(

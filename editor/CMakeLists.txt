@@ -20,10 +20,16 @@ set_target_properties(
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     OUTPUT_NAME XavierEditor
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}"
-    LINK_FLAGS "/ignore:4099"
 )
 
+if (WIN32)
+    set_target_properties(
+        XavierEditor
+        PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SubDirName}"
+        LINK_FLAGS "/ignore:4099"
+    )
+endif()
 
 target_compile_definitions(
     XavierEditor

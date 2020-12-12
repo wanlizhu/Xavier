@@ -23,10 +23,9 @@
 #include <variant>
 #include <optional>
 #include <unordered_map>
-#include <intrin.h>
-#include <float.h>
-#include <stdint.h>
-#include <assert.h>
+#include <cassert>
+
+#define SAFE_DELETE(ptr) if (ptr != nullptr) { delete ptr; ptr = nullptr; }
 
 namespace Xavier
 {

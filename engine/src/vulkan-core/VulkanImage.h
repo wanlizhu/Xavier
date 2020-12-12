@@ -34,7 +34,7 @@ namespace Xavier
         uint32_t GetArrayLayers() const { return mArrayLayers; }
         VkSampleCountFlagBits GetSampleCount() const { return mSampleCount; }
         VkImageAspectFlags GetImageAspectFlags() const { return mImageAspectFlags; }
-        VkBufferUsageFlags GetUsageFlags() const { mUsageFlags; }
+        VkBufferUsageFlags GetUsageFlags() const { return mUsageFlags; }
         VkMemoryPropertyFlags GetMemoryPropertyFlags() const { return mMemoryPropertyFlags; }
 
     private:

@@ -2,6 +2,8 @@
 
 #ifdef _WIN32
 #define VK_USE_PLATFORM_WIN32_KHR
+#elif defined(__APPLE__)
+#define VK_USE_PLATFORM_MACOS_MVK
 #else
 #error "unsupported platform"
 #endif
@@ -16,6 +18,7 @@ namespace Xavier
     class VulkanDescriptorSet;
     class VulkanRenderPass;
     class VulkanCommandBuffer;
+    class VulkanSwapChain;
 
     class VulkanRenderer : public IRenderer
     {
@@ -48,10 +51,6 @@ namespace Xavier
     private:
         void CreateVulkanInstance();
         void CreateVulkanDevice();
-        
-        void CreateVulkanSwapChain();
-        void DeleteVulkanSwapChain();
-        void AcquireNextSwapChainImage();
 
     private:
         VkInstance mVkInstance = VK_NULL_HANDLE;
@@ -64,15 +63,6 @@ namespace Xavier
         uint32_t mComputeQueueFamilyIndex = UINT32_MAX;
         uint32_t mPresentQueueFamilyIndex = UINT32_MAX;
 
-        void* mSwapchainWindow = nullptr;
-        VkSurfaceKHR   mVkSurface = VK_NULL_HANDLE;
-        VkSwapchainKHR mVkSwapchain = VK_NULL_HANDLE;
-        uint32_t mSwapchainImageIndex = UINT32_MAX;
-        Array<VkImage>     mSwapchainImages;
-        Array<VkImageView> mSwapchainImageViews;
-        Array<VkSemaphore> mSwapchainImageSemaphores;
-        Array<VkFence>     mSwapchainImageFences;
-
         std::string mEffectName;
         std::string mRenderPassName;
 
@@ -81,5 +71,6 @@ namespace Xavier
         Hash<std::string, VulkanBuffer*> mBuffers;
         Hash<std::string, VulkanImage*> mImages;
         VulkanCommandBuffer* mCommandBuffer = nullptr;
+        VulkanSwapChain* mSwapChain = nullptr;
     };
 }

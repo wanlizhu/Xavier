@@ -36,6 +36,8 @@ add_library(
     src/vulkan-core/VulkanCommandBuffer.cpp
     src/vulkan-core/VulkanSwapChain.h
     src/vulkan-core/VulkanSwapChain.cpp
+    src/vulkan-core/VulkanResource.h
+    src/vulkan-core/VulkanResource.cpp
 )
 
 get_target_property(SourceFiles XavierEngine SOURCES)

@@ -23,6 +23,7 @@
 #include <variant>
 #include <optional>
 #include <unordered_map>
+#include <unordered_set>
 #include <cassert>
 
 #define SAFE_DELETE(ptr) if (ptr != nullptr) { delete ptr; ptr = nullptr; }

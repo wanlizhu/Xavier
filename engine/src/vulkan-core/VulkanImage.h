@@ -1,12 +1,16 @@
 #pragma once
 
 #include "VulkanTools.h"
+#include "VulkanResource.h"
 
 namespace Xavier
 {
-    class VulkanImage
+    class VulkanImage : public VulkanResource
+        , public std::enable_shared_from_this<VulkanImage>
     {
     public:
+        static VulkanImage* Instance(VkImage handle);
+
         VulkanImage(
             VkDevice device,
             VkExtent2D extent,
@@ -22,10 +26,10 @@ namespace Xavier
         virtual ~VulkanImage();
 
         void InsertMemoryBarrier(
-            VkCommandBuffer commandBuffer,
             VkAccessFlags newAccess,
             VkPipelineStageFlags newStage,
-            VkImageLayout newLayout
+            VkImageLayout newLayout,
+            VkQueue newQueue
         );
 
         VkImage GetHandle() const { return mVkImage; }
@@ -38,6 +42,8 @@ namespace Xavier
         VkMemoryPropertyFlags GetMemoryPropertyFlags() const { return mMemoryPropertyFlags; }
 
     private:
+        static inline std::unordered_map<VkImage, VulkanImage*> smInstanceMap;
+
         VkDevice mVkDevice = VK_NULL_HANDLE;
         VkImage mVkImage = VK_NULL_HANDLE;
         VkImageUsageFlags mUsageFlags = 0;
@@ -53,5 +59,6 @@ namespace Xavier
         VkAccessFlags mAccessFlags = 0;
         VkPipelineStageFlags mPipelineStageFlags = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
         VkImageLayout mImageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        VkQueue mQueue = VK_NULL_HANDLE;
     };
 }

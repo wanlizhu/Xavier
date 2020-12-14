@@ -1,8 +1,16 @@
 #include "VulkanBuffer.h"
-#include "VulkanImage.h"
+#include "VulkanCommandBuffer.h"
 
 namespace Xavier
 {
+    VulkanBuffer* VulkanBuffer::Instance(VkBuffer handle)
+    {
+        if (smInstanceMap.find(handle) == smInstanceMap.end())
+            return nullptr;
+
+        return smInstanceMap[handle];
+    }
+
     VulkanBuffer::VulkanBuffer(
         VkDevice device,
         size_t size,
@@ -25,6 +33,7 @@ namespace Xavier
             nullptr, 
             &mVkBuffer
         ));
+        smInstanceMap[mVkBuffer] = this;
 
         VkMemoryRequirements memoryReq = {};
         vkGetBufferMemoryRequirements(mVkDevice, mVkBuffer, &memoryReq);
@@ -56,16 +65,17 @@ namespace Xavier
     {
         UnMap();
 
+        if (mVkBuffer)
+        {
+            smInstanceMap.erase(mVkBuffer);
+            vkDestroyBuffer(mVkDevice, mVkBuffer, nullptr);
+            mVkBuffer = VK_NULL_HANDLE;
+        }
+
         if (mVkDeviceMemory)
         {
             vkFreeMemory(mVkDevice, mVkDeviceMemory, nullptr);
             mVkDeviceMemory = VK_NULL_HANDLE;
-        }
-
-        if (mVkBuffer)
-        {
-            vkDestroyBuffer(mVkDevice, mVkBuffer, nullptr);
-            mVkBuffer = VK_NULL_HANDLE;
         }
     }
 
@@ -101,32 +111,15 @@ namespace Xavier
     }
 
     void VulkanBuffer::InsertMemoryBarrier(
-        VkCommandBuffer commandBuffer,
         VkAccessFlags newAccess,
-        VkPipelineStageFlags newStage
+        VkPipelineStageFlags newStage,
+        VkQueue newQueue
     )
     {
-        VkBufferMemoryBarrier bufferBarrier = {};
-        bufferBarrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-        bufferBarrier.buffer = mVkBuffer;
-        bufferBarrier.offset = 0;
-        bufferBarrier.size = VK_WHOLE_SIZE;
-        bufferBarrier.srcAccessMask = mAccessFlags;
-        bufferBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        bufferBarrier.dstAccessMask = newAccess;
-        bufferBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-
-        vkCmdPipelineBarrier(
-            commandBuffer,
-            mPipelineStageFlags, 
-            newStage,
-            0,                  // VkDependencyFlags
-            0, nullptr,         // VkMemoryBarrier
-            1, &bufferBarrier,  // VkBufferMemoryBarrier
-            0, nullptr          // VkImageMemoryBarrier
-        );
+        
 
         mAccessFlags = newAccess;
         mPipelineStageFlags = newStage;
+        mQueue = newQueue;
     }
 }

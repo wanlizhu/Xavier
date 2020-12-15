@@ -5,8 +5,7 @@
 
 namespace Xavier
 {
-    class VulkanImage : public VulkanResource
-        , public std::enable_shared_from_this<VulkanImage>
+    class VulkanImage : public std::enable_shared_from_this<VulkanImage>
     {
     public:
         static VulkanImage* Instance(VkImage handle);

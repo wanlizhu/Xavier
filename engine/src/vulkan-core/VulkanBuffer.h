@@ -1,12 +1,10 @@
 #pragma once
 
 #include "VulkanTools.h"
-#include "VulkanResource.h"
 
 namespace Xavier
 {
-    class VulkanBuffer : public VulkanResource
-        , public std::enable_shared_from_this<VulkanBuffer>
+    class VulkanBuffer : public std::enable_shared_from_this<VulkanBuffer>
     {
     public:
         static VulkanBuffer* Instance(VkBuffer handle);
@@ -33,7 +31,7 @@ namespace Xavier
         size_t GetSizeInBytes() const { return mSizeInBytes; }
         VkBufferUsageFlags GetUsageFlags() const { return mUsageFlags; }
         VkMemoryPropertyFlags GetMemoryPropertyFlags() const { return mMemoryPropertyFlags; }
-
+        
     private:
         static inline std::unordered_map<VkBuffer, VulkanBuffer*> smInstanceMap;
 

@@ -109,7 +109,7 @@ namespace Xavier
         void CmdBindPipeline(
             VkPipelineBindPoint bindPoint,
             VkPipeline pipeline
-        );
+        ); 
         void CmdBindDescriptorSets(
             VkPipelineBindPoint bindPoint,
             std::unordered_map<uint32_t, VkDescriptorSet> const& descriptorSets

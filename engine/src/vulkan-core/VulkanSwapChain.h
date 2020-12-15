@@ -41,8 +41,8 @@ namespace Xavier
         VkExtent2D mImageExtent = { UINT32_MAX, UINT32_MAX };
 
         uint32_t mImageIndex = UINT32_MAX;
-        Array<VkImage>     mImages;
-        Array<VkImageView> mImageViews;
-        Array<VkSemaphore> mImageSemaphores;
+        std::vector<VkImage>     mImages;
+        std::vector<VkImageView> mImageViews;
+        std::vector<VkSemaphore> mImageSemaphores;
     };
 }

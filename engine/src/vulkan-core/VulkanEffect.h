@@ -4,5 +4,9 @@
 
 namespace Xavier
 {
+    class VulkanEffect
+    {
+    public:
 
+    };
 }

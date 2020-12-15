@@ -40,13 +40,6 @@ namespace Xavier
     using PFN_OnError = std::function<void(int, const char*)>;
     using PFN_OnRender = std::function<void()>;
     using PFN_OnResize = std::function<void()>;
-    using ArgumentSet = std::unordered_map<std::string, std::any>;
-
-    template<typename T>
-    using Array = std::vector<T>;
-
-    template<typename K, typename V>
-    using Hash = std::unordered_map<K, V>;
 
     static constexpr Float FLOAT_MAX = std::numeric_limits<Float>::max();
     static constexpr Float FLOAT_INF = std::numeric_limits<Float>::infinity();

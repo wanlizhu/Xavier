@@ -32,14 +32,14 @@ add_library(
     src/vulkan-core/VulkanRenderPass.cpp
     src/vulkan-core/VulkanDescriptorSet.h
     src/vulkan-core/VulkanDescriptorSet.cpp
+    src/vulkan-core/VulkanDescriptorSetLayout.h
+    src/vulkan-core/VulkanDescriptorSetLayout.cpp
     src/vulkan-core/VulkanCommandBuffer.h
     src/vulkan-core/VulkanCommandBuffer.cpp
     src/vulkan-core/VulkanCommandManager.h
     src/vulkan-core/VulkanCommandManager.cpp
     src/vulkan-core/VulkanSwapChain.h
     src/vulkan-core/VulkanSwapChain.cpp
-    src/vulkan-core/VulkanResource.h
-    src/vulkan-core/VulkanResource.cpp
 )
 
 get_target_property(SourceFiles XavierEngine SOURCES)

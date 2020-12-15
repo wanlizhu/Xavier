@@ -9,6 +9,7 @@ namespace Xavier
 
     class VulkanCommandBuffer
     {
+        friend class VulkanCommandManager;
     public:
         enum class Status
         {
@@ -29,12 +30,13 @@ namespace Xavier
         VulkanCommandBuffer& operator=(const VulkanCommandBuffer&) = delete;
         virtual ~VulkanCommandBuffer(); 
 
-        void Begin();
-        void End();
-        void Reset();
-        void Submit(
-            VkSemaphore  waitSemaphore,
-            VkSemaphore* signalSemaphore
+        void CmdClearColorImage(
+            VkImage image,
+            VkClearColorValue clearColor
+        );
+        void CmdClearDepthStencilImage(
+            VkImage image,
+            VkClearDepthStencilValue clearDS
         );
 
         void CmdCopyBuffer(
@@ -68,15 +70,6 @@ namespace Xavier
             VkBuffer dst,
             size_t   dstOffse,
             VkExtent2D extent
-        );
-
-        void CmdClearColorImage(
-            VkImage image,
-            VkClearColorValue clearColor
-        );
-        void CmdClearDepthStencilImage(
-            VkImage image,
-            VkClearDepthStencilValue clearDS
         );
 
         void CmdPipelineBarrier(
@@ -148,6 +141,15 @@ namespace Xavier
             uint32_t firstIndex,
             uint32_t firstVertex,
             uint32_t firstInstance
+        );
+
+    private:
+        void Begin();
+        void End();
+        void Reset();
+        void Submit(
+            VkSemaphore  waitSemaphore,
+            VkSemaphore* signalSemaphore
         );
 
     private:

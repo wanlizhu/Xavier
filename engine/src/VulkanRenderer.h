@@ -58,10 +58,9 @@ namespace Xavier
         VkDevice mVkDevice = VK_NULL_HANDLE;
         VkPipelineCache mPipelineCache = VK_NULL_HANDLE;
 
-        std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
-        uint32_t mGraphicsQueueFamilyIndex = UINT32_MAX;
-        uint32_t mComputeQueueFamilyIndex = UINT32_MAX;
-        uint32_t mPresentQueueFamilyIndex = UINT32_MAX;
+        VkQueue mGraphicsQueue = VK_NULL_HANDLE;
+        VkQueue mComputeQueue = VK_NULL_HANDLE;
+        VkQueue mPresentQueue = VK_NULL_HANDLE;
 
         std::string mEffectName;
         std::string mRenderPassName;

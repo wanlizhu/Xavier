@@ -1,5 +1,6 @@
 #include "VulkanBuffer.h"
 #include "VulkanCommandBuffer.h"
+#include "VulkanCommandManager.h"
 
 namespace Xavier
 {
@@ -116,7 +117,16 @@ namespace Xavier
         VkQueue newQueue
     )
     {
-        
+        VulkanCommandManager::Instance()->GetCommandBuffer()
+        ->CmdPipelineBarrier(
+            mPipelineStageFlags,
+            newStage,
+            mAccessFlags,
+            newAccess,
+            mQueue,
+            newQueue,
+            mVkBuffer
+        );
 
         mAccessFlags = newAccess;
         mPipelineStageFlags = newStage;

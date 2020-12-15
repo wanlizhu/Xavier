@@ -34,6 +34,8 @@ add_library(
     src/vulkan-core/VulkanDescriptorSet.cpp
     src/vulkan-core/VulkanCommandBuffer.h
     src/vulkan-core/VulkanCommandBuffer.cpp
+    src/vulkan-core/VulkanCommandManager.h
+    src/vulkan-core/VulkanCommandManager.cpp
     src/vulkan-core/VulkanSwapChain.h
     src/vulkan-core/VulkanSwapChain.cpp
     src/vulkan-core/VulkanResource.h

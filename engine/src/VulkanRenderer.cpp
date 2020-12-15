@@ -5,6 +5,7 @@
 #include "vulkan-core/VulkanDescriptorSet.h"
 #include "vulkan-core/VulkanRenderPass.h"
 #include "vulkan-core/VulkanCommandBuffer.h"
+#include "vulkan-core/VulkanCommandManager.h"
 #include "vulkan-core/VulkanSwapChain.h"
 
 namespace Xavier
@@ -14,13 +15,37 @@ namespace Xavier
         Deinit();
     }
 
-    bool VulkanRenderer::Init()
+    bool VulkanRenderer::Init(void* window)
     {
         try
         {
             Deinit();
             CreateVulkanInstance();
-            CreateVulkanDevice();
+
+            VkSurfaceKHR surfaceHandle = VK_NULL_HANDLE;
+            if (window != nullptr)
+            {
+                mSwapChain = new VulkanSwapChain(mVkDevice, window);
+                surfaceHandle = mSwapChain->GetSurface();
+            }
+
+            uint32_t presentQueueFamilyIndex = UINT32_MAX;
+            uint32_t graphicsQueueFamilyIndex = UINT32_MAX;
+            uint32_t computeQueueFamilyIndex = UINT32_MAX;
+            CreateVulkanDevice(
+                surfaceHandle,
+                &presentQueueFamilyIndex,
+                &graphicsQueueFamilyIndex,
+                &computeQueueFamilyIndex
+            );
+
+            VulkanCommandManager::Instance()->Init(
+                mVkPhysicalDevice,
+                mVkDevice,
+                presentQueueFamilyIndex,
+                graphicsQueueFamilyIndex,
+                computeQueueFamilyIndex
+            );
         }
         catch (const std::exception& err)
         {
@@ -36,32 +61,24 @@ namespace Xavier
         if (mVkInstance == VK_NULL_HANDLE && mVkDevice == VK_NULL_HANDLE)
             return;
 
-    }
+        VulkanCommandManager::Instance()->Deinit();
 
-    void VulkanRenderer::CreateSwapChain(void* window)
-    {
-        SAFE_DELETE(mSwapChain);
-
-        mSwapChain = new VulkanSwapChain(mVkDevice, window);
-
-        for (uint32_t i = 0; i < mQueueFamilyProperties.size(); i++)
+        if (mSwapChain != nullptr)
         {
-            i += mGraphicsQueueFamilyIndex;
-            i %= mQueueFamilyProperties.size();
+            delete mSwapChain;
+            mSwapChain = nullptr;
+        }
 
-            VkBool32 supportPresent = VK_FALSE;
-            VK_ASSERT(vkGetPhysicalDeviceSurfaceSupportKHR(
-                    mVkPhysicalDevice,
-                    i,
-                    mSwapChain->GetSurface(),
-                    &supportPresent
-            ));
+        if (mVkDevice != VK_NULL_HANDLE)
+        {
+            vkDestroyDevice(mVkDevice, nullptr);
+            mVkDevice = VK_NULL_HANDLE;
+        }
 
-            if (supportPresent == VK_TRUE)
-            {
-                mPresentQueueFamilyIndex = i;
-                break;
-            }
+        if (mVkInstance != VK_NULL_HANDLE)
+        {
+            vkDestroyInstance(mVkInstance, nullptr);
+            mVkInstance = VK_NULL_HANDLE;
         }
     }
 

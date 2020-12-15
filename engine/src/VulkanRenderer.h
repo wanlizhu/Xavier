@@ -28,10 +28,9 @@ namespace Xavier
         VulkanRenderer& operator=(const VulkanRenderer&) = delete;
         virtual ~VulkanRenderer();
 
-        virtual bool Init() override;
+        virtual bool Init(void* window) override;
         virtual void Deinit() override;
 
-        virtual void CreateSwapChain(void* window) override;
         virtual void CreateBuffer(const char* name, const VulkanBufferCreateInfo& info) override;
         virtual void CreateImage(const char* name, const VulkanImageCreateInfo& info) override;
         virtual void CreateRenderPass(const char* name, const VulkanRenderPassCreateInfo& info) override;
@@ -50,7 +49,12 @@ namespace Xavier
 
     private:
         void CreateVulkanInstance();
-        void CreateVulkanDevice();
+        void CreateVulkanDevice(
+            VkSurfaceKHR surface,
+            uint32_t* presentQueueFamilyIndex,
+            uint32_t* graphicsQueueFamilyIndex,
+            uint32_t* computeQueueFamilyIndex
+        );
 
     private:
         VkInstance mVkInstance = VK_NULL_HANDLE;
@@ -58,17 +62,13 @@ namespace Xavier
         VkDevice mVkDevice = VK_NULL_HANDLE;
         VkPipelineCache mPipelineCache = VK_NULL_HANDLE;
 
-        VkQueue mGraphicsQueue = VK_NULL_HANDLE;
-        VkQueue mComputeQueue = VK_NULL_HANDLE;
-        VkQueue mPresentQueue = VK_NULL_HANDLE;
-
         std::string mEffectName;
         std::string mRenderPassName;
 
-        Hash<std::string, VulkanEffect*> mEffects;
-        Hash<std::string, VulkanRenderPass*> mRenderPasses;
-        Hash<std::string, VulkanBuffer*> mBuffers;
-        Hash<std::string, VulkanImage*> mImages;
+        std::unordered_map<std::string, VulkanEffect*> mEffects;
+        std::unordered_map<std::string, VulkanRenderPass*> mRenderPasses;
+        std::unordered_map<std::string, VulkanBuffer*> mBuffers;
+        std::unordered_map<std::string, VulkanImage*> mImages;
         VulkanCommandBuffer* mCommandBuffer = nullptr;
         VulkanSwapChain* mSwapChain = nullptr;
     };

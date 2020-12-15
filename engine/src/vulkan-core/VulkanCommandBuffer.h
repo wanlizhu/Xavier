@@ -11,15 +11,6 @@ namespace Xavier
     {
         friend class VulkanCommandManager;
     public:
-        enum class Status
-        {
-            Initial,
-            Recording,
-            Executable,
-            Pending,
-            Invalid
-        };
-
         VulkanCommandBuffer(
             VkDevice device,
             VkQueue queue, 
@@ -144,23 +135,29 @@ namespace Xavier
         );
 
     private:
-        void Begin();
-        void End();
-        void Reset();
         void Submit(
-            VkSemaphore  waitSemaphore,
-            VkSemaphore* signalSemaphore
+            VkSemaphore  semaphoreToWait,
+            VkSemaphore* semaphoreToSignal
         );
+        void WaitUntilCompleted();
 
     private:
+        enum class StatusFlag
+        {
+            Initial,
+            Recording,
+            Executable,
+            Pending,
+            Invalid
+        };
+
         VkDevice mVkDevice = VK_NULL_HANDLE;
         VkQueue  mVkQueue = VK_NULL_HANDLE;
         VkCommandPool   mVkCommandPool = VK_NULL_HANDLE;
         VkCommandBuffer mVkCommandBuffer = VK_NULL_HANDLE;
         VkSemaphore mVkSemaphore = VK_NULL_HANDLE;
         VkFence mVkFence = VK_NULL_HANDLE;
-
-        Status mStatus = Status::Initial;
+        StatusFlag mStatusFlag = StatusFlag::Initial;
 
         std::unordered_set<std::shared_ptr<VulkanBuffer>> mBoundBuffers;
         std::unordered_set<std::shared_ptr<VulkanImage>>  mBoundImages;

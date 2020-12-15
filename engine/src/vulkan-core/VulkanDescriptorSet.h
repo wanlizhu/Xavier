@@ -4,6 +4,9 @@
 
 namespace Xavier
 {
+    class VulkanBuffer;
+    class VulkanImage;
+
     class VulkanDescriptorSet
     {
     public:

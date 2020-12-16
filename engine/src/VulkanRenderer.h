@@ -31,6 +31,7 @@ namespace Xavier
         virtual bool Init(void* window) override;
         virtual void Deinit() override;
 
+        virtual void CreateSwapChain(void* window) override;
         virtual void CreateBuffer(const char* name, const VulkanBufferCreateInfo& info) override;
         virtual void CreateImage(const char* name, const VulkanImageCreateInfo& info) override;
         virtual void CreateRenderPass(const char* name, const VulkanRenderPassCreateInfo& info) override;
@@ -49,15 +50,12 @@ namespace Xavier
 
     private:
         void CreateVulkanInstance();
-        void CreateVulkanDevice(
-            VkSurfaceKHR surface,
-            uint32_t* presentQueueFamilyIndex,
-            uint32_t* graphicsQueueFamilyIndex,
-            uint32_t* computeQueueFamilyIndex
-        );
+        void CreateSurface(void* window);
+        void CreateVulkanDevice();
 
     private:
         VkInstance mVkInstance = VK_NULL_HANDLE;
+        VkSurfaceKHR mVkSurface = VK_NULL_HANDLE;
         VkPhysicalDevice mVkPhysicalDevice = VK_NULL_HANDLE;
         VkDevice mVkDevice = VK_NULL_HANDLE;
         VkPipelineCache mPipelineCache = VK_NULL_HANDLE;

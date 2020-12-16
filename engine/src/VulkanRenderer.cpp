@@ -29,12 +29,10 @@ namespace Xavier
                 surfaceHandle = mSwapChain->GetSurface();
             }
 
-            uint32_t presentQueueFamilyIndex = UINT32_MAX;
             uint32_t graphicsQueueFamilyIndex = UINT32_MAX;
             uint32_t computeQueueFamilyIndex = UINT32_MAX;
             CreateVulkanDevice(
                 surfaceHandle,
-                &presentQueueFamilyIndex,
                 &graphicsQueueFamilyIndex,
                 &computeQueueFamilyIndex
             );
@@ -42,7 +40,6 @@ namespace Xavier
             VulkanCommandManager::Instance()->Init(
                 mVkPhysicalDevice,
                 mVkDevice,
-                presentQueueFamilyIndex,
                 graphicsQueueFamilyIndex,
                 computeQueueFamilyIndex
             );
@@ -80,6 +77,17 @@ namespace Xavier
             vkDestroyInstance(mVkInstance, nullptr);
             mVkInstance = VK_NULL_HANDLE;
         }
+    }
+
+    void VulkanRenderer::CreateSwapChain(void* window)
+    {
+        if (mSwapChain != nullptr)
+        {
+            delete mSwapChain;
+            mSwapChain = nullptr;
+        }
+
+        mSwapChain = new VulkanSwapChain(mVkDevice, window);
     }
 
     void VulkanRenderer::CreateBuffer(const char* name, const VulkanBufferCreateInfo& info)

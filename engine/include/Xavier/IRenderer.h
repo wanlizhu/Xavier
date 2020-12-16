@@ -11,6 +11,7 @@ namespace Xavier
         virtual bool Init(void* window) = 0;
         virtual void Deinit() = 0;
 
+        virtual void CreateSwapChain(void* window) = 0;
         virtual void CreateBuffer(const char* name, const VulkanBufferCreateInfo& info) = 0;
         virtual void CreateImage(const char* name, const VulkanImageCreateInfo& info) = 0;
         virtual void CreateRenderPass(const char* name, const VulkanRenderPassCreateInfo& info) = 0;

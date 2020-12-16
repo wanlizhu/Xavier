@@ -9,7 +9,7 @@ namespace Xavier
     public:
         VulkanSwapChain(
             VkDevice device,
-            void* window
+            VkSurfaceKHR surface
         );
         VulkanSwapChain(const VulkanSwapChain&) = delete;
         VulkanSwapChain& operator=(const VulkanSwapChain&) = delete;
@@ -34,7 +34,6 @@ namespace Xavier
     private:
         void* mWindowHandle = nullptr;
         VkDevice mVkDevice = VK_NULL_HANDLE;
-        VkSurfaceKHR   mVkSurface = VK_NULL_HANDLE;
         VkSwapchainKHR mVkSwapchain = VK_NULL_HANDLE;
 
         uint32_t   mMinImageCount = 3;

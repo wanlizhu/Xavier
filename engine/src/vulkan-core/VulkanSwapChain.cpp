@@ -34,21 +34,7 @@ namespace Xavier
     {
         Destroy();
 
-#ifdef _WIN32
-        VkWin32SurfaceCreateInfoKHR surfaceCreateInfo = {};
-        surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-        surfaceCreateInfo.hinstance = GetModuleHandle(NULL);
-        surfaceCreateInfo.hwnd = (HWND)mSwapchainWindow;
 
-        VK_ASSERT(vkCreateWin32SurfaceKHR(
-            mVkInstance,
-            &surfaceCreateInfo,
-            nullptr,
-            &mVkSurface
-        ));
-#elif defined(__APPLE__)
-
-#endif
 
         VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
         swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;

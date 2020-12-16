@@ -12,7 +12,6 @@ namespace Xavier
     void VulkanCommandManager::Init(
         VkPhysicalDevice physicalDevice,
         VkDevice device,
-        uint32_t presentQueueFamilyIndex,
         uint32_t graphicsQueueFamilyIndex,
         uint32_t computeQueueFamilyIndex
     )

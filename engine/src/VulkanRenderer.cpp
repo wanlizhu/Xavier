@@ -21,27 +21,21 @@ namespace Xavier
         {
             Deinit();
             CreateVulkanInstance();
+            CreateSurface(window);
+            CreateVulkanDevice();
 
-            VkSurfaceKHR surfaceHandle = VK_NULL_HANDLE;
-            if (window != nullptr)
-            {
-                mSwapChain = new VulkanSwapChain(mVkDevice, window);
-                surfaceHandle = mSwapChain->GetSurface();
-            }
-
-            uint32_t graphicsQueueFamilyIndex = UINT32_MAX;
-            uint32_t computeQueueFamilyIndex = UINT32_MAX;
-            CreateVulkanDevice(
-                surfaceHandle,
-                &graphicsQueueFamilyIndex,
-                &computeQueueFamilyIndex
-            );
-
-            VulkanCommandManager::Instance()->Init(
+            mCommandManager = std::make_shared<VulkanCommandManager>(
                 mVkPhysicalDevice,
                 mVkDevice,
-                graphicsQueueFamilyIndex,
-                computeQueueFamilyIndex
+                mGraphicsQueueFamilyIndex,
+                mTransferQueueFamilyIndex,
+                mComputeQueueFamilyIndex,
+                mPresentQueueFamilyIndex
+            );
+
+            mSwapChain = std::make_shared<VulkanSwapChain>(
+                mVkDevice,
+                mVkSurface
             );
         }
         catch (const std::exception& err)
@@ -58,13 +52,8 @@ namespace Xavier
         if (mVkInstance == VK_NULL_HANDLE && mVkDevice == VK_NULL_HANDLE)
             return;
 
-        VulkanCommandManager::Instance()->Deinit();
-
-        if (mSwapChain != nullptr)
-        {
-            delete mSwapChain;
-            mSwapChain = nullptr;
-        }
+        mSwapChain = nullptr;
+        mCommandManager = nullptr;
 
         if (mVkDevice != VK_NULL_HANDLE)
         {
@@ -77,17 +66,6 @@ namespace Xavier
             vkDestroyInstance(mVkInstance, nullptr);
             mVkInstance = VK_NULL_HANDLE;
         }
-    }
-
-    void VulkanRenderer::CreateSwapChain(void* window)
-    {
-        if (mSwapChain != nullptr)
-        {
-            delete mSwapChain;
-            mSwapChain = nullptr;
-        }
-
-        mSwapChain = new VulkanSwapChain(mVkDevice, window);
     }
 
     void VulkanRenderer::CreateBuffer(const char* name, const VulkanBufferCreateInfo& info)
@@ -240,61 +218,80 @@ namespace Xavier
 
     void ChooseDeviceQueues(
         VkPhysicalDevice physicalDevice, 
+        VkSurfaceKHR surface,
         uint32_t* graphicsQueueFamilyIndex,
+        uint32_t* transferQueueFamilyIndex,
         uint32_t* computeQueueFamilyIndex,
-        std::vector<VkQueueFamilyProperties>* queueFamilyProperties,
-        std::vector<VkDeviceQueueCreateInfo>* queueCreateInfos
+        uint32_t* presentQueueFamilyIndex
     )
     {
         uint32_t count = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, nullptr);
 
-        queueFamilyProperties->resize(count);
-        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, queueFamilyProperties->data());
+        std::vector<VkQueueFamilyProperties> queueFamilyProperties(count);
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, queueFamilyProperties.data());
 
-        auto queues = *queueFamilyProperties;
-        VkQueueFlags assignedFlags = 0;
+        *graphicsQueueFamilyIndex = UINT32_MAX;
+        *transferQueueFamilyIndex = UINT32_MAX;
+        *computeQueueFamilyIndex = UINT32_MAX;
+        *presentQueueFamilyIndex = UINT32_MAX;
 
-        for (int i = 0; i < count; i++)
+        for (uint32_t i = 0; i < queueFamilyProperties.size(); i++)
         {
-            if ((queues[i].queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_TRANSFER_BIT)) != 0 &&
-                ((assignedFlags & VK_QUEUE_GRAPHICS_BIT) == 0))
+            VkBool32 supportsPresent = VK_FALSE;
+            vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface, &supportsPresent);
+
+            if ((queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) &&
+                *graphicsQueueFamilyIndex == UINT32_MAX)
             {
                 *graphicsQueueFamilyIndex = i;
-                assignedFlags |= VK_QUEUE_GRAPHICS_BIT;
             }
 
-            if ((queues[i].queueFlags & (VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT)) != 0 && 
-                ((assignedFlags & VK_QUEUE_COMPUTE_BIT) == 0))
+            if ((queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) &&
+                supportsPresent == VK_TRUE)
             {
-                *computeQueueFamilyIndex = i;
-                assignedFlags |= VK_QUEUE_COMPUTE_BIT;
+                *graphicsQueueFamilyIndex = i;
+                *presentQueueFamilyIndex = i;
+                break;
             }
         }
 
-        assert(*graphicsQueueFamilyIndex != UINT32_MAX);
-        assert(*computeQueueFamilyIndex != UINT32_MAX);
-
-        static const float priority = 1.0f;
-
-        VkDeviceQueueCreateInfo createInfo = {};
-        createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        createInfo.pNext = nullptr;
-        createInfo.flags = 0;
-        createInfo.pQueuePriorities = &priority;
-        createInfo.queueFamilyIndex = *graphicsQueueFamilyIndex;
-        createInfo.queueCount = 1;
-        queueCreateInfos->push_back(createInfo);
-
-        if (*graphicsQueueFamilyIndex != *computeQueueFamilyIndex)
+        if (*presentQueueFamilyIndex == UINT32_MAX)
         {
-            createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-            createInfo.pNext = nullptr;
-            createInfo.flags = 0;
-            createInfo.pQueuePriorities = &priority;
-            createInfo.queueFamilyIndex = *computeQueueFamilyIndex;
-            createInfo.queueCount = 1;
-            queueCreateInfos->push_back(createInfo);
+            std::cout << "warning: graphics queue and present queue are not the same one";
+        }
+
+        for (uint32_t i = 0; i < queueFamilyProperties.size(); i++)
+        {
+            if ((queueFamilyProperties[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
+                *computeQueueFamilyIndex == UINT32_MAX)
+            {
+                *computeQueueFamilyIndex = i;
+            }
+
+            if ((queueFamilyProperties[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
+                *computeQueueFamilyIndex != *graphicsQueueFamilyIndex)
+            {
+                *computeQueueFamilyIndex = i;
+                break;
+            }
+        }
+
+        for (uint32_t i = 0; i < queueFamilyProperties.size(); i++)
+        {
+            if ((queueFamilyProperties[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
+                *transferQueueFamilyIndex == UINT32_MAX)
+            {
+                *transferQueueFamilyIndex = i;
+            }
+
+            if ((queueFamilyProperties[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
+                *transferQueueFamilyIndex != *graphicsQueueFamilyIndex &&
+                *transferQueueFamilyIndex != *computeQueueFamilyIndex)
+            {
+                *transferQueueFamilyIndex = i;
+                break;
+            }
         }
     }
 
@@ -310,11 +307,34 @@ namespace Xavier
         ChoosePhysicalDevice(mVkInstance, &mVkPhysicalDevice);
         ChooseDeviceQueues(
             mVkPhysicalDevice, 
+            mVkSurface,
             &mGraphicsQueueFamilyIndex,
+            &mTransferQueueFamilyIndex,
             &mComputeQueueFamilyIndex,
-            &mQueueFamilyProperties, 
-            &queueCreateInfos
+            &mPresentQueueFamilyIndex
         );
+
+        static const float priority = 1.0f;
+        std::unordered_set<uint32_t> queueFamilyIndices;
+        queueFamilyIndices.insert(mGraphicsQueueFamilyIndex);
+        queueFamilyIndices.insert(mTransferQueueFamilyIndex);
+        queueFamilyIndices.insert(mComputeQueueFamilyIndex);
+        
+        for (auto index : queueFamilyIndices)
+        {
+            if (index == UINT32_MAX)
+                continue;
+
+            VkDeviceQueueCreateInfo createInfo = {};
+            createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+            createInfo.pNext = nullptr;
+            createInfo.flags = 0;
+            createInfo.pQueuePriorities = &priority;
+            createInfo.queueFamilyIndex = index;
+            createInfo.queueCount = 1;
+
+            queueCreateInfos.push_back(createInfo);
+        }
 
         GetPhysicalDeviceExtensions(mVkPhysicalDevice, &extensionNames);
         vkGetPhysicalDeviceFeatures(mVkPhysicalDevice, &enableFeatures);

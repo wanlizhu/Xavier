@@ -27,5 +27,5 @@ namespace Xavier
         VkDescriptorSetLayout mVkDescriptorSetLayout = VK_NULL_HANDLE;
 
         std::unordered_map<std::string, VkDescriptorSetLayoutBinding> mBindings;
-    }
+    };
 }

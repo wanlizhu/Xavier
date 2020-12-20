@@ -19,7 +19,6 @@ namespace Xavier
         : mArguments(argc, argv)
     {
         mRenderer.reset(new VulkanRenderer());
-        mRenderer->Init();
     }
 
     Engine::~Engine()

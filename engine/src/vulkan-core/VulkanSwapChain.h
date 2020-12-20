@@ -18,7 +18,6 @@ namespace Xavier
         void Resize();
         void Present();
 
-        VkSurfaceKHR GetSurface() const { return mVkSurface; }
         VkSwapchainKHR GetHandle() const { return mVkSwapchain; }
         VkExtent2D GetExtent() const { return mImageExtent; }
         VkImage GetBackImage() const { assert(mImageIndex != UINT32_MAX); return mImages[mImageIndex]; }

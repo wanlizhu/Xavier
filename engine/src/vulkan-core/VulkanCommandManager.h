@@ -17,25 +17,31 @@ namespace Xavier
     class VulkanCommandManager
     {
     public:
-        static VulkanCommandManager* Instance();
-
-        void Init(
+        VulkanCommandManager(
             VkPhysicalDevice physicalDevice, 
             VkDevice device,
             uint32_t graphicsQueueFamilyIndex,
-            uint32_t computeQueueFamilyIndex
+            uint32_t transferQueueFamilyIndex,
+            uint32_t computeQueueFamilyIndex,
+            uint32_t presentQueueFamilyIndex
         );
-        void Deinit();
+        VulkanCommandManager(const VulkanCommandManager&) = delete;
+        VulkanCommandManager& operator=(const VulkanCommandManager&) = delete;
+        virtual ~VulkanCommandManager();
 
-        VulkanQueue const& GetGraphicsQueue() const;
         VulkanCommandBuffer* GetGraphicsCommandBuffer();
         void FlushGraphicsCommands();
         void WaitGraphicsIdle();
+
+        VulkanCommandBuffer* GetTransferCommandBuffer();
+        void FlushTransferCommands();
+        void WaitTransferIdle();
         
-        VulkanQueue const& GetComputeQueue() const;
         VulkanCommandBuffer* GetComputeCommandBuffer();
         void FlushComputeCommands();
         void WaitComputeIdle();
+
+        VulkanQueue const& GetPresentQueue() const { return mPresentQueue; }
 
     private:
         VkPhysicalDevice mVkPhysicalDevice = VK_NULL_HANDLE;
@@ -45,8 +51,14 @@ namespace Xavier
         VkCommandPool mGraphicsCommandPool = VK_NULL_HANDLE;
         VulkanCommandBuffer* mGraphicsCommandBuffer = nullptr;
 
+        VulkanQueue   mTransferQueue = {};
+        VkCommandPool mTransferCommandPool = VK_NULL_HANDLE;
+        VulkanCommandBuffer* mTransferCommandBuffer = nullptr;
+
         VulkanQueue   mComputeQueue = {};
         VkCommandPool mComputeCommandPool = VK_NULL_HANDLE;
         VulkanCommandBuffer* mComputeCommandBuffer = nullptr;
+
+        VulkanQueue mPresentQueue = {};
     };
 }

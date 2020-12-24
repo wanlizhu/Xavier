@@ -31,8 +31,5 @@ namespace Xavier
         VkDescriptorPool mVkDescriptorPool = VK_NULL_HANDLE;
         VkDescriptorSet mVkDescriptorSet = VK_NULL_HANDLE;
         VkDescriptorSetLayout mVkDescriptorSetLayout = VK_NULL_HANDLE;
-
-        std::unordered_set<std::shared_ptr<VulkanBuffer>> mBoundBuffers;
-        std::unordered_set<std::shared_ptr<VulkanImage>>  mBoundImages;
     };
 }

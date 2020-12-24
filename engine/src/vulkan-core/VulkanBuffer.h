@@ -21,11 +21,6 @@ namespace Xavier
 
         uint8_t* Map();
         void UnMap();
-        void InsertMemoryBarrier(
-            VkAccessFlags newAccess,
-            VkPipelineStageFlags newStage,
-            VkQueue newQueue
-        );
 
         VkBuffer GetHandle() const { return mVkBuffer; }
         size_t GetSizeInBytes() const { return mSizeInBytes; }

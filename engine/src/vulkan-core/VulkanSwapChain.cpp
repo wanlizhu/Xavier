@@ -4,10 +4,10 @@ namespace Xavier
 {
     VulkanSwapChain::VulkanSwapChain(
         VkDevice device,
-        void* window
+        VkSurfaceKHR surface
     )
         : mVkDevice(device)
-        , mWindowHandle(window)
+        , mVkSurface(surface)
     {
 
     }
@@ -18,7 +18,7 @@ namespace Xavier
     void VulkanSwapChain::Resize()
     {}
 
-    void VulkanSwapChain::Present()
+    void VulkanSwapChain::Present(std::vector<VkSemaphore> const& semaphoresToWait)
     {}
 
     void VulkanSwapChain::Destroy()
@@ -33,8 +33,6 @@ namespace Xavier
     void VulkanSwapChain::Recreate()
     {
         Destroy();
-
-
 
         VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
         swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -121,8 +119,5 @@ namespace Xavier
     }
 
     void VulkanSwapChain::AcquireNextImage()
-    {}
-
-    void VulkanSwapChain::SyncedPresent(const VkSemaphore* semaphores, uint32_t count)
     {}
 }

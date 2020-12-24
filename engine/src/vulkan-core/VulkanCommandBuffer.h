@@ -9,7 +9,7 @@ namespace Xavier
 
     class VulkanCommandBuffer
     {
-        friend class VulkanCommandManager;
+        friend class VulkanCommandQueue;
     public:
         VulkanCommandBuffer(
             VkDevice device,
@@ -20,6 +20,10 @@ namespace Xavier
         VulkanCommandBuffer(const VulkanCommandBuffer&) = delete;
         VulkanCommandBuffer& operator=(const VulkanCommandBuffer&) = delete;
         virtual ~VulkanCommandBuffer(); 
+
+        VkSemaphore GetCompletionSemaphore() const { return mVkSemaphore; }
+        void Submit(std::vector<VkSemaphore> const& semaphoresToWait);
+        void WaitUntilCompleted();
 
         void CmdClearColorImage(
             VkImage image,
@@ -135,13 +139,6 @@ namespace Xavier
         );
 
     private:
-        void Submit(
-            VkSemaphore  semaphoreToWait,
-            VkSemaphore* semaphoreToSignal
-        );
-        void WaitUntilCompleted();
-
-    private:
         enum class StatusFlag
         {
             Initial,
@@ -158,8 +155,5 @@ namespace Xavier
         VkSemaphore mVkSemaphore = VK_NULL_HANDLE;
         VkFence mVkFence = VK_NULL_HANDLE;
         StatusFlag mStatusFlag = StatusFlag::Initial;
-
-        std::unordered_set<std::shared_ptr<VulkanBuffer>> mBoundBuffers;
-        std::unordered_set<std::shared_ptr<VulkanImage>>  mBoundImages;
     };
 }

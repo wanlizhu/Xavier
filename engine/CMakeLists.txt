@@ -22,6 +22,7 @@ add_library(
     src/tools/CommandArguments.h
     src/tools/CommandArguments.cpp
     src/vulkan-core/VulkanTools.h
+    src/vulkan-core/VulkanTools.cpp
     src/vulkan-core/VulkanBuffer.h
     src/vulkan-core/VulkanBuffer.cpp
     src/vulkan-core/VulkanImage.h
@@ -36,8 +37,8 @@ add_library(
     src/vulkan-core/VulkanDescriptorSetLayout.cpp
     src/vulkan-core/VulkanCommandBuffer.h
     src/vulkan-core/VulkanCommandBuffer.cpp
-    src/vulkan-core/VulkanCommandManager.h
-    src/vulkan-core/VulkanCommandManager.cpp
+    src/vulkan-core/VulkanCommandQueue.h
+    src/vulkan-core/VulkanCommandQueue.cpp
     src/vulkan-core/VulkanSwapChain.h
     src/vulkan-core/VulkanSwapChain.cpp
 )

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "VulkanTools.h"
-#include "VulkanResource.h"
 
 namespace Xavier
 {
@@ -23,14 +22,7 @@ namespace Xavier
         VulkanImage(const VulkanImage&) = delete;
         VulkanImage& operator=(const VulkanImage&) = delete;
         virtual ~VulkanImage();
-
-        void InsertMemoryBarrier(
-            VkAccessFlags newAccess,
-            VkPipelineStageFlags newStage,
-            VkImageLayout newLayout,
-            VkQueue newQueue
-        );
-
+        
         VkImage GetHandle() const { return mVkImage; }
         VkExtent2D GetExtent() const { return mExtent; }
         uint32_t GetMipLevels() const { return mMipLevels; }

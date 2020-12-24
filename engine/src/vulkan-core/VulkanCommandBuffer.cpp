@@ -42,6 +42,38 @@ namespace Xavier
         }
     }
 
+    void VulkanCommandBuffer::Submit(std::vector<VkSemaphore> const& semaphoresToWait)
+    {
+        assert(mStatusFlag == StatusFlag::Executable);
+
+        if (mVkFence)
+        {
+            VK_ASSERT(vkResetFences(mVkDevice, 1, &mVkFence));
+        }
+
+        std::vector<VkShaderStageFlags> shaderStageMasks;
+        for (auto& _ : semaphoresToWait)
+            shaderStageMasks.push_back();
+
+        VkSubmitInfo submitInfo = {};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.pNext = nullptr;
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &mVkCommandBuffer;
+        submitInfo.waitSemaphoreCount = semaphoresToWait.size();
+        submitInfo.pWaitSemaphores = semaphoresToWait.data();
+        submitInfo.pWaitDstStageMask = shaderStageMasks.data();
+        submitInfo.signalSemaphoreCount = 1;
+        submitInfo.pSignalSemaphores = &mVkSemaphore;
+
+        VK_ASSERT(vkQueueSubmit(mVkQueue, 1, &submitInfo, mVkFence));
+
+        mStatusFlag = StatusFlag::Pending;
+    }
+
+    void VulkanCommandBuffer::WaitUntilCompleted()
+    {}
+
     void VulkanCommandBuffer::CmdCopyBuffer(
         VkBuffer src, 
         size_t   srcOffset,

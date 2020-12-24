@@ -16,23 +16,22 @@ namespace Xavier
         virtual ~VulkanSwapChain();
 
         void Resize();
-        void Present();
+        void Present(std::vector<VkSemaphore> const& semaphoresToWait);
 
         VkSwapchainKHR GetHandle() const { return mVkSwapchain; }
         VkExtent2D GetExtent() const { return mImageExtent; }
         VkImage GetBackImage() const { assert(mImageIndex != UINT32_MAX); return mImages[mImageIndex]; }
         VkImageView GetBackImageView() const { assert(mImageIndex != UINT32_MAX); return mImageViews[mImageIndex]; }
-        VkSemaphore GetBackImageSemaphore() const { assert(mImageIndex != UINT32_MAX); return mImageSemaphores[mImageIndex]; }
+        VkSemaphore GetImageAvailableSemaphore() const { assert(mImageIndex != UINT32_MAX); return mImageSemaphores[mImageIndex]; }
 
     private:
         void Destroy();
         void Recreate();
         void AcquireNextImage();
-        void SyncedPresent(const VkSemaphore* semaphores, uint32_t count);
 
     private:
-        void* mWindowHandle = nullptr;
         VkDevice mVkDevice = VK_NULL_HANDLE;
+        VkSurfaceKHR mVkSurface = VK_NULL_HANDLE;
         VkSwapchainKHR mVkSwapchain = VK_NULL_HANDLE;
 
         uint32_t   mMinImageCount = 3;

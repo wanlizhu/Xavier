@@ -1,6 +1,5 @@
 #include "VulkanImage.h"
 #include "VulkanCommandBuffer.h"
-#include "VulkanCommandManager.h"
 
 namespace Xavier
 {
@@ -92,31 +91,5 @@ namespace Xavier
             vkFreeMemory(mVkDevice, mVkDeviceMemory, nullptr);
             mVkDeviceMemory = VK_NULL_HANDLE;
         }
-    }
-
-    void VulkanImage::InsertMemoryBarrier(
-        VkAccessFlags newAccess,
-        VkPipelineStageFlags newStage,
-        VkImageLayout newLayout,
-        VkQueue newQueue
-    )
-    {
-        VulkanCommandManager::Instance()->GetCommandBuffer()
-        ->CmdPipelineBarrier(
-            mPipelineStageFlags,
-            newStage,
-            mAccessFlags,
-            newAccess,
-            mQueue,
-            newQueue,
-            mImageLayout,
-            newLayout,
-            mVkImage
-        );
-
-        mAccessFlags = newAccess;
-        mPipelineStageFlags = newStage;
-        mImageLayout = newLayout;
-        mQueue = newQueue;
     }
 }
